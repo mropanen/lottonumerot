@@ -5,6 +5,9 @@
 .nitro
 .cache
 dist
+.wrangler
+wrangler.jsonc
+worker-configuration.d.ts
 
 # Node dependencies
 node_modules
