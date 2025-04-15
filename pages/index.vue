@@ -2,7 +2,10 @@
 /* Navigation will occur before fetching is complete.
   Handle 'pending' and 'error' states directly within your component's template
 */
-const { status, data: numbers } = await useLazyAsyncData('numbers', () => $fetch('/api/current-numbers'))
+const { status, data: numbers } = useFetch('/api/current-numbers', {
+  lazy: true,
+  server: false
+})
 
 watch(numbers, () => {
   // Because count might start out null, you won't have access

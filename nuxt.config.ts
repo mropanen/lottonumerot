@@ -13,6 +13,6 @@ export default defineNuxtConfig({
     strict: true
   },
   alias: {
-    "cloudflare": "env.d.ts",
+    "cloudflare": "./env.d.ts",
   }
 })
