@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CurrentNumbers from "~/components/CurrentNumbers.vue";
 import currentWeeknumber from "../utils/current-weeknumber";
+import OwnNumbers from "~/components/OwnNumbers.vue";
 definePageMeta({
   title: 'Lottonumerot, viikko ' + currentWeeknumber(),
 })
@@ -23,9 +24,10 @@ useSeoMeta({
         </h1>
       </template>
 
-      <div class="h-32">
+      <template #default>
         <CurrentNumbers />
-      </div>
+        <OwnNumbers />
+      </template>
 
       <template #footer>
         <div class="h-8" />

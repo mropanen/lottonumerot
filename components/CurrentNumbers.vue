@@ -1,15 +1,17 @@
 <script setup lang="ts">
-/* Navigation will occur before fetching is complete.
-  Handle 'pending' and 'error' states directly within your component's template
-*/
 const { status, data: numbers } = useFetch('/api/current-numbers', {
   lazy: true,
   server: false
 })
 
-watch(numbers, () => {
-  // Because count might start out null, you won't have access
-  // to its contents immediately, but you can watch it.
+const primaryNumbers = computed(() => {
+  return numbers.value?.numbers?.primary
+})
+const secondaryNumber = computed(() => {
+  return numbers.value?.numbers?.secondary[0] ?? null
+})
+const tertiaryNumber = computed(() => {
+  return numbers.value?.numbers?.tertiary[0] ?? null
 })
 </script>
 
@@ -21,9 +23,31 @@ watch(numbers, () => {
         <USkeleton class="h-4 w-[200px]" />
       </div>
     </div>
+    <div v-else-if="status === 'error'">
+      <div class="text-red-500">
+        ohohupsis
+      </div>
+    </div>
     <div v-else>
-      <div class="grid gap-2">
-        <UPinInput :default-value="numbers?.numbers?.primary" length="7" disabled size="xl" type="number" />
+      <div class="flex gap-2">
+        <!-- Primary numbers (7 digits) -->
+        <template v-for="(digit, index) in primaryNumbers" :key="'primary-' + index">
+          <div class="w-10 h-12 flex items-center justify-center border rounded-lg bg-gray-100 text-gray-900 text-xl font-semibold">
+            {{ digit }}
+          </div>
+        </template>
+
+        <!-- Secondary number (1 digit) -->
+        <div v-if="primaryNumbers && primaryNumbers.length > 0"
+             class="w-10 h-12 flex items-center justify-center border rounded-lg bg-green-100 text-green-800 text-xl font-semibold">
+          {{ secondaryNumber }}
+        </div>
+
+        <!-- Tertiary number (1 digit) -->
+        <div v-if="primaryNumbers && primaryNumbers.length > 0"
+             class="w-10 h-12 flex items-center justify-center border rounded-lg bg-amber-100 text-amber-800 text-xl font-semibold">
+          {{ tertiaryNumber }}
+        </div>
       </div>
     </div>
   </div>
