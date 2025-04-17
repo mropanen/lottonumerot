@@ -1,6 +1,8 @@
 // server/api/current-numbers.ts
 import {EventHandlerRequest, H3Event} from "h3";
 import currentWeeknumber from "~/utils/current-weeknumber";
+import {NumberFetchError, ParsedResults} from "~/types/custom-types";
+import {parseNumbersJson} from "~/server/utils/number-utils";
 
 function getCurrentWeekString(): string {
     // @TODO this is not correct, it should be the current week number
@@ -8,17 +10,7 @@ function getCurrentWeekString(): string {
     return `${new Date().getFullYear()}-W${currentWeeknumber()-1}`;
 }
 
-function parseNumbersJson(json: string): any {
-    const tempJson = JSON.parse(json)[0];
-    const finalJson = {
-        numbers: tempJson.results[0],
-        jackpot: tempJson.jackpots[0].amount,
-    };
-
-    return finalJson;
-}
-
-export default defineEventHandler((event: H3Event<EventHandlerRequest>) => {
+export default defineEventHandler((event: H3Event<EventHandlerRequest>): ParsedResults|NumberFetchError => {
     const KV = event.context.cloudflare.env.lottonumerot;
     const currentWeekString = getCurrentWeekString();
     return KV.get(currentWeekString).then((results: string) => {
